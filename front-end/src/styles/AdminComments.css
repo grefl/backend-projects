@@ -1,0 +1,16 @@
+.AdminComments {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  place-items:center;
+  height: 100%;
+}
+.AdminFeedEditor {
+  border: 1px solid gray;
+  height: 100%;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+.AdminComments-List {
+  display: grid;
+}
