@@ -51,7 +51,7 @@ sesh = Sessions()
 def api_cookies():
     return jsonify({'cookies': sesh.all()})
 
-@app.route('/logout')
+@app.route('/api/logout', methods=['post'])
 def logout(): 
     userID = request.cookies.get('userID')
     if userID is not None and sesh.has(userID):
@@ -65,8 +65,8 @@ def signup():
 
 @app.route('/auth', methods=['post'])
 def auth():
-    pw    = request.form.get('uname')
-    uname = request.form.get('pw')
+    uname = request.form.get('uname')
+    pw = request.form.get('pw')
     if not pw or not uname:
         return 'error', 400
     
@@ -81,15 +81,32 @@ def auth():
 
     return response, 200
 
+
+
+
+@app.route('/logout')
+def logoutview():
+    return render_template('./logout.html')
+
 @app.route('/')
 def api_root():
     
     userID = request.cookies.get('userID')
     app.logger.info(f"{userID=}")
+
     if sesh.has(userID):
+
         app.logger.info('usersessiondata')
-        app.logger.info(sesh.get(userID))
-    response = make_response("data")
+        session = sesh.get(userID)
+        app.logger.info(session)
+
+        user = session['uname']
+        expired = session['expiration'] < time.time()
+        app.logger.info(session['expiration'], time.time())
+        message = 'you need to login again' if expired else 'Well, hello there'
+        return make_response(f'{message} {user}'), 200
+
+    response = make_response("Who are you?")
      
     return response, 200
 
